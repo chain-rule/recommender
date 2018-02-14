@@ -1,0 +1,12 @@
+[package]
+name = "recommender"
+version = "0.0.1"
+license = "Apache-2.0/MIT"
+authors = ["Ivan Ukhov <ivan.ukhov@gmail.com>"]
+description = "The package provides a recommender system."
+documentation = "https://docs.rs/recommender"
+homepage = "https://github.com/chain-rule/recommender"
+repository = "https://github.com/chain-rule/recommender"
+readme = "README.md"
+categories = ["algorithms", "science"]
+keywords = ["recommender"]
