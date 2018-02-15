@@ -1,7 +1,11 @@
 use std::collections::HashMap;
 
 use Result;
-use dataset::{Dataset, ItemID, Iterator, Rating, UserID};
+use dataset::Dataset;
+use dataset::ItemID;
+use dataset::Iterator;
+use dataset::Rating;
+use dataset::UserID;
 
 pub struct Baseline {
     pub global_bias: Rating,

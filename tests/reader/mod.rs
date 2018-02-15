@@ -1,7 +1,9 @@
 use recommender::Result;
-use recommender::dataset::{Iterator, PairRecord};
+use recommender::dataset::Iterator;
+use recommender::dataset::PairRecord;
 use std::fs::File;
-use std::io::{BufRead, BufReader};
+use std::io::BufRead;
+use std::io::BufReader;
 use std::path::Path;
 
 pub struct Reader<T> {

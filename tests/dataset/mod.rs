@@ -1,9 +1,15 @@
 use recommender::Result;
-use recommender::dataset::{ItemID, ItemRecord, PairRecord, UserID, UserRecord};
-use recommender::dataset::{self, Iterator};
+use recommender::dataset::ItemID;
+use recommender::dataset::ItemRecord;
+use recommender::dataset::Iterator;
+use recommender::dataset::PairRecord;
+use recommender::dataset::UserID;
+use recommender::dataset::UserRecord;
+use recommender::dataset;
 use std::path::PathBuf;
 
-use reader::{Config, Reader};
+use reader::Config;
+use reader::Reader;
 
 pub struct Dataset {
     path: PathBuf,
