@@ -1,16 +1,19 @@
 extern crate recommender;
 
-mod reader;
+use recommender::Baseline;
 
-use reader::Reader;
+use dataset::Dataset;
+use reader::Config;
+
+mod dataset;
+mod reader;
 
 const RATING_PATH: &'static str = "tests/fixtures/ratings.dat";
 
 macro_rules! ok(($result:expr) => ($result.unwrap()));
 
 #[test]
-fn compute() {
-    let mut reader = ok!(Reader::from_path(RATING_PATH)).delimiter("::");
-    let mut fields = Vec::new();
-    while ok!(reader.next(&mut fields)) {}
+fn new() {
+    let dataset = Dataset::new(RATING_PATH, Config::new().delimiter("::"));
+    let _ = ok!(Baseline::new(dataset));
 }
