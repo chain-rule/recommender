@@ -15,7 +15,10 @@ impl Dataset {
     where
         T: Into<PathBuf>,
     {
-        Dataset { path: path.into(), config: config }
+        Dataset {
+            path: path.into(),
+            config: config,
+        }
     }
 }
 

@@ -80,8 +80,6 @@ impl Config {
 impl Default for Config {
     #[inline]
     fn default() -> Self {
-        Config {
-            delimiter: ",",
-        }
+        Config { delimiter: "," }
     }
 }
