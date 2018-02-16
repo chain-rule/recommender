@@ -8,14 +8,14 @@ pub type Rating = f64;
 
 pub type PairID = (UserID, ItemID);
 
-pub type PairRecord = (PairID, Rating);
-pub type UserRecord = (UserID, Rating);
-pub type ItemRecord = (ItemID, Rating);
+pub type PairRating = (PairID, Rating);
+pub type UserRating = (UserID, Rating);
+pub type ItemRating = (ItemID, Rating);
 
 pub trait Dataset {
-    type Pairs: Iterator<Item = PairRecord>;
-    type Users: Iterator<Item = UserRecord>;
-    type Items: Iterator<Item = ItemRecord>;
+    type Pairs: Iterator<Item = PairRating>;
+    type Users: Iterator<Item = UserRating>;
+    type Items: Iterator<Item = ItemRating>;
 
     fn pairs(&self) -> Result<Self::Pairs>;
     fn users(&self, id: ItemID) -> Result<Self::Users>;

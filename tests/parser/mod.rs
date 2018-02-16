@@ -1,6 +1,6 @@
 use recommender::Result;
 use recommender::dataset::Iterator;
-use recommender::dataset::PairRecord;
+use recommender::dataset::PairRating;
 use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
@@ -41,7 +41,7 @@ impl<T> Iterator for Parser<T>
 where
     T: BufRead,
 {
-    type Item = PairRecord;
+    type Item = PairRating;
 
     fn next(&mut self) -> Result<Option<Self::Item>> {
         self.buffer.clear();
