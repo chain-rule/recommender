@@ -1,6 +1,6 @@
 use recommender::Result;
-use recommender::dataset::Iterator;
 use recommender::dataset::PairRating;
+use recommender::dataset::Reader;
 use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
@@ -37,7 +37,7 @@ impl Parser<BufReader<File>> {
     }
 }
 
-impl<T> Iterator for Parser<T>
+impl<T> Reader for Parser<T>
 where
     T: BufRead,
 {

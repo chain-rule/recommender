@@ -13,16 +13,16 @@ pub type UserRating = (User, Rating);
 pub type ItemRating = (Item, Rating);
 
 pub trait Dataset {
-    type Pairs: Iterator<Item = PairRating>;
-    type Users: Iterator<Item = UserRating>;
-    type Items: Iterator<Item = ItemRating>;
+    type Pairs: Reader<Item = PairRating>;
+    type Users: Reader<Item = UserRating>;
+    type Items: Reader<Item = ItemRating>;
 
-    fn pairs(&self) -> Result<Self::Pairs>;
-    fn users(&self, Item) -> Result<Self::Users>;
-    fn items(&self, User) -> Result<Self::Items>;
+    fn pairs(self) -> Result<Self::Pairs>;
+    fn users(self, Item) -> Result<Self::Users>;
+    fn items(self, User) -> Result<Self::Items>;
 }
 
-pub trait Iterator {
+pub trait Reader {
     type Item;
 
     fn next(&mut self) -> Result<Option<Self::Item>>;
@@ -68,9 +68,13 @@ pub struct Map<T, U> {
     function: U,
 }
 
-impl<T: ?Sized> Iterator for Box<T>
+pub struct Iterator<T> {
+    iterator: T,
+}
+
+impl<T: ?Sized> Reader for Box<T>
 where
-    T: Iterator,
+    T: Reader,
 {
     type Item = T::Item;
 
@@ -80,9 +84,9 @@ where
     }
 }
 
-impl<T, U> Iterator for Filter<T, U>
+impl<T, U> Reader for Filter<T, U>
 where
-    T: Iterator,
+    T: Reader,
     U: FnMut(&T::Item) -> bool,
 {
     type Item = T::Item;
@@ -97,9 +101,9 @@ where
     }
 }
 
-impl<T, U, V> Iterator for Map<T, U>
+impl<T, U, V> Reader for Map<T, U>
 where
-    T: Iterator,
+    T: Reader,
     U: FnMut(T::Item) -> V,
 {
     type Item = V;
@@ -110,5 +114,27 @@ where
         } else {
             Ok(None)
         }
+    }
+}
+
+impl<T> Reader for Iterator<T>
+where
+    T: ::std::iter::Iterator,
+{
+    type Item = T::Item;
+
+    #[inline]
+    fn next(&mut self) -> Result<Option<Self::Item>> {
+        Ok(self.iterator.next())
+    }
+}
+
+impl<T> From<T> for Iterator<T>
+where
+    T: ::std::iter::Iterator,
+{
+    #[inline]
+    fn from(iterator: T) -> Self {
+        Iterator { iterator: iterator }
     }
 }

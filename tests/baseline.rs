@@ -3,6 +3,7 @@ extern crate recommender;
 use recommender::Baseline;
 
 use dataset::Disk;
+use dataset::Memory;
 use parser::Config;
 
 mod dataset;
@@ -22,7 +23,8 @@ macro_rules! ok(
 #[test]
 fn new() {
     let dataset = Disk::new(RATING_PATH, Config::new().delimiter("::"));
-    let baseline = ok!(Baseline::new(dataset, 10, 15, 10));
+    let dataset = ok!(Memory::new(&dataset));
+    let baseline = ok!(Baseline::new(&dataset, 10, 15, 10));
     assert_equal!(baseline.global_bias, 3.581564453029317, 1e-10);
     assert_equal!(baseline.user_biases.len(), 6040);
     assert_equal!(baseline.item_biases.len(), 3706);

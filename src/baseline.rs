@@ -3,8 +3,8 @@ use std::collections::HashMap;
 use Result;
 use dataset::Dataset;
 use dataset::Item;
-use dataset::Iterator;
 use dataset::Rating;
+use dataset::Reader;
 use dataset::User;
 
 pub struct Baseline {
@@ -27,7 +27,7 @@ impl Baseline {
         item_shrinkage: usize,
     ) -> Result<Self>
     where
-        T: Dataset,
+        T: Copy + Dataset,
     {
         let mut global_mean = Mean::new(0);
         let mut user_means: HashMap<User, Mean> = HashMap::new();
