@@ -3,10 +3,10 @@ extern crate recommender;
 use recommender::Baseline;
 
 use dataset::Dataset;
-use reader::Config;
+use parser::Config;
 
 mod dataset;
-mod reader;
+mod parser;
 
 const RATING_PATH: &'static str = "tests/fixtures/ratings.dat";
 

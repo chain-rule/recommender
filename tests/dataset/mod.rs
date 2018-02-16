@@ -8,8 +8,8 @@ use recommender::dataset::UserRecord;
 use recommender::dataset;
 use std::path::PathBuf;
 
-use reader::Config;
-use reader::Reader;
+use parser::Config;
+use parser::Parser;
 
 pub struct Dataset {
     path: PathBuf,
@@ -35,13 +35,13 @@ impl dataset::Dataset for Dataset {
 
     #[inline]
     fn pairs(&self) -> Result<Self::Pairs> {
-        Ok(Box::new(Reader::from_path(&self.path, self.config)?))
+        Ok(Box::new(Parser::from_path(&self.path, self.config)?))
     }
 
     #[inline]
     fn users(&self, id: ItemID) -> Result<Self::Users> {
         Ok(Box::new(
-            Reader::from_path(&self.path, self.config)?
+            Parser::from_path(&self.path, self.config)?
                 .filter(move |&((_, item_id), _): &PairRecord| item_id == id)
                 .map(|((user_id, _), rating)| (user_id, rating)),
         ))
@@ -50,7 +50,7 @@ impl dataset::Dataset for Dataset {
     #[inline]
     fn items(&self, id: UserID) -> Result<Self::Items> {
         Ok(Box::new(
-            Reader::from_path(&self.path, self.config)?
+            Parser::from_path(&self.path, self.config)?
                 .filter(move |&((user_id, _), _): &PairRecord| user_id == id)
                 .map(|((_, item_id), rating)| (item_id, rating)),
         ))

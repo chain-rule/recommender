@@ -6,7 +6,7 @@ use std::io::BufRead;
 use std::io::BufReader;
 use std::path::Path;
 
-pub struct Reader<T> {
+pub struct Parser<T> {
     reader: T,
     buffer: String,
     config: Config,
@@ -17,10 +17,10 @@ pub struct Config {
     delimiter: &'static str,
 }
 
-impl<T> Reader<T> {
+impl<T> Parser<T> {
     #[inline]
     pub fn new(reader: T, config: Config) -> Self {
-        Reader {
+        Parser {
             reader: reader,
             buffer: String::new(),
             config: config,
@@ -28,16 +28,16 @@ impl<T> Reader<T> {
     }
 }
 
-impl Reader<BufReader<File>> {
+impl Parser<BufReader<File>> {
     pub fn from_path<T>(path: T, config: Config) -> Result<Self>
     where
         T: AsRef<Path>,
     {
-        Ok(Reader::new(BufReader::new(File::open(path)?), config))
+        Ok(Parser::new(BufReader::new(File::open(path)?), config))
     }
 }
 
-impl<T> Iterator for Reader<T>
+impl<T> Iterator for Parser<T>
 where
     T: BufRead,
 {
