@@ -29,17 +29,17 @@ impl Dataset {
 }
 
 impl dataset::Dataset for Dataset {
-    type PairIterator = Box<Iterator<Item = PairRecord>>;
-    type UserIterator = Box<Iterator<Item = UserRecord>>;
-    type ItemIterator = Box<Iterator<Item = ItemRecord>>;
+    type Pairs = Box<Iterator<Item = PairRecord>>;
+    type Users = Box<Iterator<Item = UserRecord>>;
+    type Items = Box<Iterator<Item = ItemRecord>>;
 
     #[inline]
-    fn iter_pairs(&self) -> Result<Self::PairIterator> {
+    fn pairs(&self) -> Result<Self::Pairs> {
         Ok(Box::new(Reader::from_path(&self.path, self.config)?))
     }
 
     #[inline]
-    fn iter_users(&self, id: ItemID) -> Result<Self::UserIterator> {
+    fn users(&self, id: ItemID) -> Result<Self::Users> {
         Ok(Box::new(
             Reader::from_path(&self.path, self.config)?
                 .filter(move |&((_, item_id), _): &PairRecord| item_id == id)
@@ -48,7 +48,7 @@ impl dataset::Dataset for Dataset {
     }
 
     #[inline]
-    fn iter_items(&self, id: UserID) -> Result<Self::ItemIterator> {
+    fn items(&self, id: UserID) -> Result<Self::Items> {
         Ok(Box::new(
             Reader::from_path(&self.path, self.config)?
                 .filter(move |&((user_id, _), _): &PairRecord| user_id == id)

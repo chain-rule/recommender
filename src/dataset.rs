@@ -13,13 +13,13 @@ pub type UserRecord = (UserID, Rating);
 pub type ItemRecord = (ItemID, Rating);
 
 pub trait Dataset {
-    type PairIterator: Iterator<Item = PairRecord>;
-    type UserIterator: Iterator<Item = UserRecord>;
-    type ItemIterator: Iterator<Item = ItemRecord>;
+    type Pairs: Iterator<Item = PairRecord>;
+    type Users: Iterator<Item = UserRecord>;
+    type Items: Iterator<Item = ItemRecord>;
 
-    fn iter_pairs(&self) -> Result<Self::PairIterator>;
-    fn iter_users(&self, id: ItemID) -> Result<Self::UserIterator>;
-    fn iter_items(&self, id: UserID) -> Result<Self::ItemIterator>;
+    fn pairs(&self) -> Result<Self::Pairs>;
+    fn users(&self, id: ItemID) -> Result<Self::Users>;
+    fn items(&self, id: UserID) -> Result<Self::Items>;
 }
 
 pub trait Iterator {

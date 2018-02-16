@@ -32,7 +32,7 @@ impl Baseline {
         let mut global_mean = Mean::new(0);
         let mut user_means: HashMap<UserID, Mean> = HashMap::new();
         let mut item_means: HashMap<ItemID, Mean> = HashMap::new();
-        let mut iterator = dataset.iter_pairs()?;
+        let mut iterator = dataset.pairs()?;
         while let Some(((user_id, item_id), rating)) = iterator.next()? {
             global_mean.consume(rating);
             user_means
@@ -45,7 +45,7 @@ impl Baseline {
         global_mean.finalize();
         for _ in 0..n_iterations {
             item_means.values_mut().for_each(|mean| mean.reset());
-            let mut iterator = dataset.iter_pairs()?;
+            let mut iterator = dataset.pairs()?;
             while let Some(((user_id, item_id), rating)) = iterator.next()? {
                 item_means
                     .get_mut(&item_id)
@@ -54,7 +54,7 @@ impl Baseline {
             }
             item_means.values_mut().for_each(|mean| mean.finalize());
             user_means.values_mut().for_each(|mean| mean.reset());
-            let mut iterator = dataset.iter_pairs()?;
+            let mut iterator = dataset.pairs()?;
             while let Some(((user_id, item_id), rating)) = iterator.next()? {
                 user_means
                     .get_mut(&user_id)
