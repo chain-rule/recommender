@@ -48,6 +48,14 @@ pub trait Iterator {
             function: function,
         }
     }
+
+    #[inline]
+    fn pack(self) -> Box<Self>
+    where
+        Self: Sized,
+    {
+        Box::new(self)
+    }
 }
 
 pub struct Filter<T, U> {

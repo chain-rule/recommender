@@ -35,24 +35,22 @@ impl Dataset for Disk {
 
     #[inline]
     fn pairs(&self) -> Result<Self::Pairs> {
-        Ok(Box::new(Parser::from_path(&self.path, self.config)?))
+        Ok(Parser::from_path(&self.path, self.config)?.pack())
     }
 
     #[inline]
     fn users(&self, id: ItemID) -> Result<Self::Users> {
-        Ok(Box::new(
-            Parser::from_path(&self.path, self.config)?
-                .filter(move |&((_, item_id), _): &PairRecord| item_id == id)
-                .map(|((user_id, _), rating)| (user_id, rating)),
-        ))
+        Ok(Parser::from_path(&self.path, self.config)?
+            .filter(move |&((_, item_id), _): &PairRecord| item_id == id)
+            .map(|((user_id, _), rating)| (user_id, rating))
+            .pack())
     }
 
     #[inline]
     fn items(&self, id: UserID) -> Result<Self::Items> {
-        Ok(Box::new(
-            Parser::from_path(&self.path, self.config)?
-                .filter(move |&((user_id, _), _): &PairRecord| user_id == id)
-                .map(|((_, item_id), rating)| (item_id, rating)),
-        ))
+        Ok(Parser::from_path(&self.path, self.config)?
+            .filter(move |&((user_id, _), _): &PairRecord| user_id == id)
+            .map(|((_, item_id), rating)| (item_id, rating))
+            .pack())
     }
 }
