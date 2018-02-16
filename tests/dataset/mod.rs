@@ -1,10 +1,10 @@
 use recommender::Result;
 use recommender::dataset::Dataset;
-use recommender::dataset::ItemID;
+use recommender::dataset::Item;
 use recommender::dataset::ItemRating;
 use recommender::dataset::Iterator;
 use recommender::dataset::PairRating;
-use recommender::dataset::UserID;
+use recommender::dataset::User;
 use recommender::dataset::UserRating;
 use std::path::PathBuf;
 
@@ -39,18 +39,18 @@ impl Dataset for Disk {
     }
 
     #[inline]
-    fn users(&self, id: ItemID) -> Result<Self::Users> {
+    fn users(&self, item: Item) -> Result<Self::Users> {
         Ok(Parser::from_path(&self.path, self.config)?
-            .filter(move |&((_, item_id), _): &PairRating| item_id == id)
-            .map(|((user_id, _), rating)| (user_id, rating))
+            .filter(move |&((_, other), _): &PairRating| other == item)
+            .map(|((user, _), rating)| (user, rating))
             .pack())
     }
 
     #[inline]
-    fn items(&self, id: UserID) -> Result<Self::Items> {
+    fn items(&self, user: User) -> Result<Self::Items> {
         Ok(Parser::from_path(&self.path, self.config)?
-            .filter(move |&((user_id, _), _): &PairRating| user_id == id)
-            .map(|((_, item_id), rating)| (item_id, rating))
+            .filter(move |&((other, _), _): &PairRating| other == user)
+            .map(|((_, item), rating)| (item, rating))
             .pack())
     }
 }

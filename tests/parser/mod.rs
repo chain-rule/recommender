@@ -50,11 +50,11 @@ where
             _ => {}
         }
         let mut fields = self.buffer.trim().split(self.config.delimiter);
-        let user_id = match fields.next() {
+        let user = match fields.next() {
             None => return Ok(None),
             Some(field) => field.parse()?,
         };
-        let item_id = match fields.next() {
+        let item = match fields.next() {
             None => return Ok(None),
             Some(field) => field.parse()?,
         };
@@ -62,7 +62,7 @@ where
             None => return Ok(None),
             Some(field) => field.parse()?,
         };
-        Ok(Some(((user_id, item_id), rating)))
+        Ok(Some(((user, item), rating)))
     }
 }
 

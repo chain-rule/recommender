@@ -2,15 +2,15 @@ use std::ops::DerefMut;
 
 use Result;
 
-pub type UserID = u64;
-pub type ItemID = u64;
+pub type User = u64;
+pub type Item = u64;
 pub type Rating = f64;
 
-pub type PairID = (UserID, ItemID);
+pub type Pair = (User, Item);
 
-pub type PairRating = (PairID, Rating);
-pub type UserRating = (UserID, Rating);
-pub type ItemRating = (ItemID, Rating);
+pub type PairRating = (Pair, Rating);
+pub type UserRating = (User, Rating);
+pub type ItemRating = (Item, Rating);
 
 pub trait Dataset {
     type Pairs: Iterator<Item = PairRating>;
@@ -18,8 +18,8 @@ pub trait Dataset {
     type Items: Iterator<Item = ItemRating>;
 
     fn pairs(&self) -> Result<Self::Pairs>;
-    fn users(&self, id: ItemID) -> Result<Self::Users>;
-    fn items(&self, id: UserID) -> Result<Self::Items>;
+    fn users(&self, Item) -> Result<Self::Users>;
+    fn items(&self, User) -> Result<Self::Items>;
 }
 
 pub trait Iterator {

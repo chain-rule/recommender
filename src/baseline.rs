@@ -2,15 +2,15 @@ use std::collections::HashMap;
 
 use Result;
 use dataset::Dataset;
-use dataset::ItemID;
+use dataset::Item;
 use dataset::Iterator;
 use dataset::Rating;
-use dataset::UserID;
+use dataset::User;
 
 pub struct Baseline {
     pub global_bias: Rating,
-    pub user_biases: HashMap<UserID, Rating>,
-    pub item_biases: HashMap<ItemID, Rating>,
+    pub user_biases: HashMap<User, Rating>,
+    pub item_biases: HashMap<Item, Rating>,
 }
 
 struct Mean {
@@ -30,36 +30,36 @@ impl Baseline {
         T: Dataset,
     {
         let mut global_mean = Mean::new(0);
-        let mut user_means: HashMap<UserID, Mean> = HashMap::new();
-        let mut item_means: HashMap<ItemID, Mean> = HashMap::new();
+        let mut user_means: HashMap<User, Mean> = HashMap::new();
+        let mut item_means: HashMap<Item, Mean> = HashMap::new();
         let mut iterator = dataset.pairs()?;
-        while let Some(((user_id, item_id), rating)) = iterator.next()? {
+        while let Some(((user, item), rating)) = iterator.next()? {
             global_mean.consume(rating);
             user_means
-                .entry(user_id)
+                .entry(user)
                 .or_insert_with(|| Mean::new(user_shrinkage));
             item_means
-                .entry(item_id)
+                .entry(item)
                 .or_insert_with(|| Mean::new(item_shrinkage));
         }
         global_mean.finalize();
         for _ in 0..n_iterations {
             item_means.values_mut().for_each(|mean| mean.reset());
             let mut iterator = dataset.pairs()?;
-            while let Some(((user_id, item_id), rating)) = iterator.next()? {
+            while let Some(((user, item), rating)) = iterator.next()? {
                 item_means
-                    .get_mut(&item_id)
+                    .get_mut(&item)
                     .unwrap()
-                    .consume(rating - global_mean.value - user_means[&user_id].value);
+                    .consume(rating - global_mean.value - user_means[&user].value);
             }
             item_means.values_mut().for_each(|mean| mean.finalize());
             user_means.values_mut().for_each(|mean| mean.reset());
             let mut iterator = dataset.pairs()?;
-            while let Some(((user_id, item_id), rating)) = iterator.next()? {
+            while let Some(((user, item), rating)) = iterator.next()? {
                 user_means
-                    .get_mut(&user_id)
+                    .get_mut(&user)
                     .unwrap()
-                    .consume(rating - global_mean.value - item_means[&item_id].value);
+                    .consume(rating - global_mean.value - item_means[&item].value);
             }
             user_means.values_mut().for_each(|mean| mean.finalize());
         }
