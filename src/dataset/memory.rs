@@ -2,13 +2,13 @@ use Result;
 use dataset::Item;
 use dataset::ItemDataset;
 use dataset::ItemRating;
-use dataset::Iterator;
 use dataset::PairDataset;
 use dataset::PairRating;
-use dataset::Reader;
 use dataset::User;
 use dataset::UserDataset;
 use dataset::UserRating;
+use reader::Iterator;
+use reader::Reader;
 
 /// A database that reads records from memory.
 pub struct Memory {

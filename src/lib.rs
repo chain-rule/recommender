@@ -5,6 +5,7 @@
 pub mod baseline;
 pub mod dataset;
 pub mod parser;
+pub mod reader;
 
 /// An error.
 pub struct Error(Box<std::error::Error>);

@@ -1,3 +1,5 @@
+//! Readers.
+
 use std::ops::DerefMut;
 
 use Result;

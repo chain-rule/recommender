@@ -6,7 +6,7 @@ use std::path::Path;
 
 use Result;
 use dataset::PairRating;
-use dataset::Reader;
+use reader::Reader;
 
 /// A text parser.
 pub struct Text<T> {

@@ -1,17 +1,13 @@
 //! Datasets.
 
 use Result;
+use reader::Reader;
 
 pub use self::disk::Disk;
 pub use self::memory::Memory;
-pub use self::reader::Filter;
-pub use self::reader::Iterator;
-pub use self::reader::Map;
-pub use self::reader::Reader;
 
 mod disk;
 mod memory;
-mod reader;
 
 /// A user.
 pub type User = u64;

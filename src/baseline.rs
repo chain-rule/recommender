@@ -6,8 +6,8 @@ use Result;
 use dataset::Item;
 use dataset::PairDataset;
 use dataset::Rating;
-use dataset::Reader;
 use dataset::User;
+use reader::Reader;
 
 /// A baseline.
 pub struct Baseline {
