@@ -1,4 +1,8 @@
+//! Datasets.
+
 use std::ops::DerefMut;
+
+use Result;
 
 pub use self::disk::Disk;
 pub use self::memory::Memory;
@@ -6,33 +10,57 @@ pub use self::memory::Memory;
 mod disk;
 mod memory;
 
-use Result;
-
+/// A user.
 pub type User = u64;
+
+/// An item.
 pub type Item = u64;
+
+/// A rating.
 pub type Rating = f64;
 
+/// A user and an item.
 pub type Pair = (User, Item);
 
+/// A user, an item, and a rating.
 pub type PairRating = (Pair, Rating);
+
+/// A user and a rating.
 pub type UserRating = (User, Rating);
+
+/// An item and a rating.
 pub type ItemRating = (Item, Rating);
 
+/// A dataset.
 pub trait Dataset {
+    /// An iterator over users, items, and ratings.
     type Pairs: Reader<Item = PairRating>;
+
+    /// An iterator over users and ratings.
     type Users: Reader<Item = UserRating>;
+
+    /// An iterator over items and ratings.
     type Items: Reader<Item = ItemRating>;
 
+    /// Create an iterator over users, items, and ratings.
     fn pairs(self) -> Result<Self::Pairs>;
+
+    /// Create an iterator over users and ratings.
     fn users(self, Item) -> Result<Self::Users>;
+
+    /// Create an iterator over items and ratings.
     fn items(self, User) -> Result<Self::Items>;
 }
 
+/// A reader.
 pub trait Reader {
+    /// A record.
     type Item;
 
+    /// Read the next record.
     fn next(&mut self) -> Result<Option<Self::Item>>;
 
+    /// Filter records.
     #[inline]
     fn filter<T>(self, function: T) -> Filter<Self, T>
     where
@@ -44,6 +72,7 @@ pub trait Reader {
         }
     }
 
+    /// Map records.
     #[inline]
     fn map<T>(self, function: T) -> Map<Self, T>
     where
@@ -56,16 +85,19 @@ pub trait Reader {
     }
 }
 
+/// A filter.
 pub struct Filter<T, U> {
     iterator: T,
     function: U,
 }
 
+/// A mapping.
 pub struct Map<T, U> {
     iterator: T,
     function: U,
 }
 
+/// An adaptor for an iterator.
 pub struct Iterator<T> {
     iterator: T,
 }

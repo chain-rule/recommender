@@ -12,12 +12,14 @@ use dataset::UserRating;
 use parser::Config;
 use parser::Parser;
 
+/// A dataset that reads records from disk.
 pub struct Disk {
     path: PathBuf,
     config: Config,
 }
 
 impl Disk {
+    /// Create a dataset.
     pub fn new<T>(path: T, config: Config) -> Self
     where
         T: Into<PathBuf>,

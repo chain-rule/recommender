@@ -6,8 +6,10 @@ pub mod baseline;
 pub mod dataset;
 pub mod parser;
 
+/// An error.
 pub struct Error(Box<std::error::Error>);
 
+/// A result.
 pub type Result<T> = std::result::Result<T, Error>;
 
 impl std::fmt::Debug for Error {

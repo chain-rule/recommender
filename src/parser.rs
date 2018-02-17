@@ -1,3 +1,5 @@
+//! Parsers.
+
 use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
@@ -8,12 +10,14 @@ use Result;
 use dataset::PairRating;
 use dataset::Reader;
 
+/// A text parser.
 pub struct Parser<T> {
     reader: BufReader<T>,
     buffer: String,
     config: Config,
 }
 
+/// A configuration of a text parser.
 #[derive(Clone, Copy)]
 pub struct Config {
     delimiter: &'static str,
@@ -23,8 +27,9 @@ impl<T> Parser<T>
 where
     T: Read,
 {
+    /// Create a parser given a reader.
     #[inline]
-    pub fn new(reader: T, config: Config) -> Self {
+    pub fn from_reader(reader: T, config: Config) -> Self {
         Parser {
             reader: BufReader::new(reader),
             buffer: String::new(),
@@ -34,11 +39,12 @@ where
 }
 
 impl Parser<File> {
+    /// Create a parser given a path.
     pub fn from_path<T>(path: T, config: Config) -> Result<Self>
     where
         T: AsRef<Path>,
     {
-        Ok(Parser::new(File::open(path)?, config))
+        Ok(Parser::from_reader(File::open(path)?, config))
     }
 }
 
@@ -72,11 +78,13 @@ where
 }
 
 impl Config {
+    /// Create a configuration.
     #[inline]
     pub fn new() -> Self {
         Default::default()
     }
 
+    /// Set the delimiter.
     #[inline]
     pub fn delimiter(mut self, value: &'static str) -> Self {
         self.delimiter = value;

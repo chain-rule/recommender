@@ -8,12 +8,14 @@ use dataset::Reader;
 use dataset::User;
 use dataset::UserRating;
 
+/// A database that reads records from memory.
 pub struct Memory {
     data: Vec<PairRating>,
 }
 
 impl Memory {
-    pub fn new<T>(dataset: T) -> Result<Self>
+    /// Create a database from another dataset.
+    pub fn from_dataset<T>(dataset: T) -> Result<Self>
     where
         T: Dataset,
     {

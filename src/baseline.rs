@@ -1,3 +1,5 @@
+//! Baselines.
+
 use std::collections::HashMap;
 
 use Result;
@@ -7,9 +9,13 @@ use dataset::Rating;
 use dataset::Reader;
 use dataset::User;
 
+/// A baseline.
 pub struct Baseline {
+    /// A global bias.
     pub global_bias: Rating,
+    /// User biases.
     pub user_biases: HashMap<User, Rating>,
+    /// Item biases.
     pub item_biases: HashMap<Item, Rating>,
 }
 
@@ -20,7 +26,8 @@ struct Mean {
 }
 
 impl Baseline {
-    pub fn new<T>(
+    /// Compute a baseline given a dataset.
+    pub fn from_dataset<T>(
         dataset: T,
         n_iterations: usize,
         user_shrinkage: usize,
