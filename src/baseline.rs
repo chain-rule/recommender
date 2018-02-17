@@ -29,7 +29,7 @@ impl Baseline {
     /// Compute a baseline given a dataset.
     pub fn from_dataset<T>(
         dataset: T,
-        n_iterations: usize,
+        n_epoch: usize,
         user_shrinkage: usize,
         item_shrinkage: usize,
     ) -> Result<Self>
@@ -50,7 +50,7 @@ impl Baseline {
                 .or_insert_with(|| Mean::new(item_shrinkage));
         }
         global_mean.finalize();
-        for _ in 0..n_iterations {
+        for _ in 0..n_epoch {
             item_means.values_mut().for_each(|mean| mean.reset());
             let mut reader = dataset.pairs()?;
             while let Some(((user, item), rating)) = reader.next()? {
