@@ -8,7 +8,6 @@ use recommender::dataset::Reader;
 use recommender::dataset::User;
 use recommender::dataset::UserRating;
 use std::fs::File;
-use std::io::BufReader;
 use std::path::PathBuf;
 
 use parser::Config;
@@ -50,7 +49,7 @@ impl Memory {
 }
 
 impl<'l> Dataset for &'l Disk {
-    type Pairs = Parser<BufReader<File>>;
+    type Pairs = Parser<File>;
     type Users = Box<Reader<Item = UserRating>>;
     type Items = Box<Reader<Item = ItemRating>>;
 

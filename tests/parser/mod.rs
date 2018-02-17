@@ -4,10 +4,11 @@ use recommender::dataset::Reader;
 use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
+use std::io::Read;
 use std::path::Path;
 
 pub struct Parser<T> {
-    reader: T,
+    reader: BufReader<T>,
     buffer: String,
     config: Config,
 }
@@ -17,29 +18,32 @@ pub struct Config {
     delimiter: &'static str,
 }
 
-impl<T> Parser<T> {
+impl<T> Parser<T>
+where
+    T: Read,
+{
     #[inline]
     pub fn new(reader: T, config: Config) -> Self {
         Parser {
-            reader: reader,
+            reader: BufReader::new(reader),
             buffer: String::new(),
             config: config,
         }
     }
 }
 
-impl Parser<BufReader<File>> {
+impl Parser<File> {
     pub fn from_path<T>(path: T, config: Config) -> Result<Self>
     where
         T: AsRef<Path>,
     {
-        Ok(Parser::new(BufReader::new(File::open(path)?), config))
+        Ok(Parser::new(File::open(path)?, config))
     }
 }
 
 impl<T> Reader for Parser<T>
 where
-    T: BufRead,
+    T: Read,
 {
     type Item = PairRating;
 
