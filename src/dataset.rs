@@ -48,14 +48,6 @@ pub trait Reader {
             function: function,
         }
     }
-
-    #[inline]
-    fn pack(self) -> Box<Self>
-    where
-        Self: Sized,
-    {
-        Box::new(self)
-    }
 }
 
 pub struct Filter<T, U> {

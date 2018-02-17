@@ -58,17 +58,19 @@ impl<'l> Dataset for &'l Disk {
     }
 
     fn users(self, item: Item) -> Result<Self::Users> {
-        Ok(Parser::from_path(&self.path, self.config)?
-            .filter(move |&((_, other), _): &PairRating| other == item)
-            .map(|((user, _), rating)| (user, rating))
-            .pack())
+        Ok(Box::new(
+            Parser::from_path(&self.path, self.config)?
+                .filter(move |&((_, other), _): &PairRating| other == item)
+                .map(|((user, _), rating)| (user, rating)),
+        ))
     }
 
     fn items(self, user: User) -> Result<Self::Items> {
-        Ok(Parser::from_path(&self.path, self.config)?
-            .filter(move |&((other, _), _): &PairRating| other == user)
-            .map(|((_, item), rating)| (item, rating))
-            .pack())
+        Ok(Box::new(
+            Parser::from_path(&self.path, self.config)?
+                .filter(move |&((other, _), _): &PairRating| other == user)
+                .map(|((_, item), rating)| (item, rating)),
+        ))
     }
 }
 
@@ -82,16 +84,20 @@ impl<'l> Dataset for &'l Memory {
     }
 
     fn users(self, item: Item) -> Result<Self::Users> {
-        Ok(Iterator::from(self.data.iter().cloned())
-            .filter(move |&((_, other), _): &PairRating| other == item)
-            .map(|((user, _), rating)| (user, rating))
-            .pack())
+        Ok(Box::new(Iterator::from(
+            self.data
+                .iter()
+                .filter(move |&&((_, other), _)| other == item)
+                .map(|&((user, _), rating)| (user, rating)),
+        )))
     }
 
     fn items(self, user: User) -> Result<Self::Items> {
-        Ok(Iterator::from(self.data.iter().cloned())
-            .filter(move |&((other, _), _): &PairRating| other == user)
-            .map(|((_, item), rating)| (item, rating))
-            .pack())
+        Ok(Box::new(Iterator::from(
+            self.data
+                .iter()
+                .filter(move |&&((other, _), _)| other == user)
+                .map(|&((_, item), rating)| (item, rating)),
+        )))
     }
 }
