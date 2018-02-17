@@ -73,6 +73,7 @@ where
 {
     type Record = T::Record;
 
+    #[inline]
     fn next(&mut self) -> Result<Option<Self::Record>> {
         while let Some(record) = self.iterator.next()? {
             if (self.function)(&record) {
@@ -90,12 +91,9 @@ where
 {
     type Record = V;
 
+    #[inline]
     fn next(&mut self) -> Result<Option<Self::Record>> {
-        if let Some(record) = self.iterator.next()? {
-            Ok(Some((self.function)(record)))
-        } else {
-            Ok(None)
-        }
+        Ok(self.iterator.next()?.map(&mut self.function))
     }
 }
 
