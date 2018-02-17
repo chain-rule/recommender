@@ -14,14 +14,13 @@ pub struct Memory {
 }
 
 impl Memory {
-    /// Create a database from another dataset.
-    pub fn from_dataset<T>(dataset: T) -> Result<Self>
+    /// Create a database given a reader.
+    pub fn from_reader<T>(mut reader: T) -> Result<Self>
     where
-        T: Dataset,
+        T: Reader<Item = PairRating>,
     {
         let mut data = vec![];
-        let mut iterator = dataset.pairs()?;
-        while let Some(record) = iterator.next()? {
+        while let Some(record) = reader.next()? {
             data.push(record);
         }
         Ok(Memory { data: data })
