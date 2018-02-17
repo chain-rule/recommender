@@ -14,15 +14,18 @@ use dataset::Users;
 use parser::Text;
 use parser::TextConfig;
 
-/// A dataset that reads records from disk.
+/// A disk-based dataset.
 pub struct Disk {
     path: PathBuf,
-    config: TextConfig,
+    config: DiskConfig,
 }
+
+/// A configuration of a disk-based dataset.
+pub type DiskConfig = TextConfig;
 
 impl Disk {
     /// Create a dataset.
-    pub fn new<T>(path: T, config: TextConfig) -> Self
+    pub fn new<T>(path: T, config: DiskConfig) -> Self
     where
         T: Into<PathBuf>,
     {

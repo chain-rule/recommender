@@ -2,9 +2,9 @@ extern crate recommender;
 
 use recommender::baseline::Baseline;
 use recommender::dataset::Disk;
+use recommender::dataset::DiskConfig;
 use recommender::dataset::Memory;
 use recommender::dataset::Pairs;
-use recommender::parser::TextConfig;
 
 const RATING_PATH: &'static str = "tests/fixtures/ratings.dat";
 
@@ -19,7 +19,7 @@ macro_rules! ok(
 
 #[test]
 fn from_dataset() {
-    let dataset = Disk::new(RATING_PATH, TextConfig::new().delimiter("::"));
+    let dataset = Disk::new(RATING_PATH, DiskConfig::new().delimiter("::"));
     let dataset = ok!(Memory::from_reader(ok!(dataset.pairs())));
     let baseline = ok!(Baseline::from_dataset(&dataset, 10, 15, 10));
     assert_equal!(baseline.global_bias, 3.581564453029317, 1e-10);

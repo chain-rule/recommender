@@ -10,13 +10,13 @@ use dataset::Users;
 use reader::Iterator;
 use reader::Reader;
 
-/// A database that reads records from memory.
+/// A memory-based dataset.
 pub struct Memory {
     data: Vec<PairRating>,
 }
 
 impl Memory {
-    /// Create a database given a reader.
+    /// Create a dataset given a reader.
     pub fn from_reader<T>(mut reader: T) -> Result<Self>
     where
         T: Reader<Record = PairRating>,

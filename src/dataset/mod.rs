@@ -4,6 +4,7 @@ use Result;
 use reader::Reader;
 
 pub use self::disk::Disk;
+pub use self::disk::DiskConfig;
 pub use self::memory::Memory;
 
 mod disk;
