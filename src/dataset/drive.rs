@@ -14,29 +14,29 @@ use dataset::Users;
 use parser::Text;
 use parser::TextConfig;
 
-/// A disk-based dataset.
-pub struct Disk {
+/// A drive-based dataset.
+pub struct Drive {
     path: PathBuf,
-    config: DiskConfig,
+    config: DriveConfig,
 }
 
-/// A configuration of a disk-based dataset.
-pub type DiskConfig = TextConfig;
+/// A configuration of a drive-based dataset.
+pub type DriveConfig = TextConfig;
 
-impl Disk {
+impl Drive {
     /// Create a dataset.
-    pub fn new<T>(path: T, config: DiskConfig) -> Self
+    pub fn new<T>(path: T, config: DriveConfig) -> Self
     where
         T: Into<PathBuf>,
     {
-        Disk {
+        Drive {
             path: path.into(),
             config: config,
         }
     }
 }
 
-impl<'l> Pairs for &'l Disk {
+impl<'l> Pairs for &'l Drive {
     type Reader = Text<File>;
 
     #[inline]
@@ -45,7 +45,7 @@ impl<'l> Pairs for &'l Disk {
     }
 }
 
-impl<'l> Users for &'l Disk {
+impl<'l> Users for &'l Drive {
     type Reader = Box<Reader<Record = UserRating>>;
 
     fn users(self, item: Item) -> Result<Self::Reader> {
@@ -57,7 +57,7 @@ impl<'l> Users for &'l Disk {
     }
 }
 
-impl<'l> Items for &'l Disk {
+impl<'l> Items for &'l Drive {
     type Reader = Box<Reader<Record = ItemRating>>;
 
     fn items(self, user: User) -> Result<Self::Reader> {

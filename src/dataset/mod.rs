@@ -3,11 +3,11 @@
 use Result;
 use reader::Reader;
 
-pub use self::disk::Disk;
-pub use self::disk::DiskConfig;
+pub use self::drive::Drive;
+pub use self::drive::DriveConfig;
 pub use self::memory::Memory;
 
-mod disk;
+mod drive;
 mod memory;
 
 /// A user.
