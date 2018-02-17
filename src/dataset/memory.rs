@@ -1,11 +1,13 @@
 use Result;
-use dataset::Dataset;
 use dataset::Item;
+use dataset::ItemDataset;
 use dataset::ItemRating;
 use dataset::Iterator;
+use dataset::PairDataset;
 use dataset::PairRating;
 use dataset::Reader;
 use dataset::User;
+use dataset::UserDataset;
 use dataset::UserRating;
 
 /// A database that reads records from memory.
@@ -27,16 +29,18 @@ impl Memory {
     }
 }
 
-impl<'l> Dataset for &'l Memory {
-    type Pairs = Iterator<::std::iter::Cloned<::std::slice::Iter<'l, PairRating>>>;
-    type Users = Box<Reader<Item = UserRating> + 'l>;
-    type Items = Box<Reader<Item = ItemRating> + 'l>;
+impl<'l> PairDataset for &'l Memory {
+    type Reader = Iterator<::std::iter::Cloned<::std::slice::Iter<'l, PairRating>>>;
 
-    fn pairs(self) -> Result<Self::Pairs> {
+    fn pairs(self) -> Result<Self::Reader> {
         Ok(Iterator::from(self.data.iter().cloned()))
     }
+}
 
-    fn users(self, item: Item) -> Result<Self::Users> {
+impl<'l> UserDataset for &'l Memory {
+    type Reader = Box<Reader<Item = UserRating> + 'l>;
+
+    fn users(self, item: Item) -> Result<Self::Reader> {
         Ok(Box::new(Iterator::from(
             self.data
                 .iter()
@@ -44,8 +48,12 @@ impl<'l> Dataset for &'l Memory {
                 .map(|&((user, _), rating)| (user, rating)),
         )))
     }
+}
 
-    fn items(self, user: User) -> Result<Self::Items> {
+impl<'l> ItemDataset for &'l Memory {
+    type Reader = Box<Reader<Item = ItemRating> + 'l>;
+
+    fn items(self, user: User) -> Result<Self::Reader> {
         Ok(Box::new(Iterator::from(
             self.data
                 .iter()

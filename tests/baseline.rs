@@ -1,9 +1,9 @@
 extern crate recommender;
 
 use recommender::baseline::Baseline;
-use recommender::dataset::Dataset;
 use recommender::dataset::Disk;
 use recommender::dataset::Memory;
+use recommender::dataset::PairDataset;
 use recommender::parser::TextConfig;
 
 const RATING_PATH: &'static str = "tests/fixtures/ratings.dat";

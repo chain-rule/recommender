@@ -31,25 +31,31 @@ pub type UserRating = (User, Rating);
 /// An item and a rating.
 pub type ItemRating = (Item, Rating);
 
-/// A dataset.
-pub trait Dataset {
-    /// An iterator over users, items, and ratings.
-    type Pairs: Reader<Item = PairRating>;
+/// A dataset of users, items, and ratings.
+pub trait PairDataset {
+    /// A reader.
+    type Reader: Reader<Item = PairRating>;
 
-    /// An iterator over users and ratings.
-    type Users: Reader<Item = UserRating>;
+    /// Create a reader.
+    fn pairs(self) -> Result<Self::Reader>;
+}
 
-    /// An iterator over items and ratings.
-    type Items: Reader<Item = ItemRating>;
+/// A dataset of users and ratings for a given item.
+pub trait UserDataset {
+    /// A reader.
+    type Reader: Reader<Item = UserRating>;
 
-    /// Create an iterator over users, items, and ratings.
-    fn pairs(self) -> Result<Self::Pairs>;
+    /// Create a reader.
+    fn users(self, Item) -> Result<Self::Reader>;
+}
 
-    /// Create an iterator over users and ratings.
-    fn users(self, Item) -> Result<Self::Users>;
+/// A dataset of items and ratings for a given user.
+pub trait ItemDataset {
+    /// A reader.
+    type Reader: Reader<Item = ItemRating>;
 
-    /// Create an iterator over items and ratings.
-    fn items(self, User) -> Result<Self::Items>;
+    /// Create a reader.
+    fn items(self, User) -> Result<Self::Reader>;
 }
 
 /// A reader.
