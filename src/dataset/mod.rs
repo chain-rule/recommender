@@ -1,5 +1,11 @@
 use std::ops::DerefMut;
 
+pub use self::disk::Disk;
+pub use self::memory::Memory;
+
+mod disk;
+mod memory;
+
 use Result;
 
 pub type User = u64;
