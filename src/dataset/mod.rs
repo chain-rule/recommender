@@ -34,7 +34,7 @@ pub type ItemRating = (Item, Rating);
 /// A dataset of users, items, and ratings.
 pub trait PairDataset {
     /// A reader.
-    type Reader: Reader<Item = PairRating>;
+    type Reader: Reader<Record = PairRating>;
 
     /// Create a reader.
     fn pairs(self) -> Result<Self::Reader>;
@@ -43,7 +43,7 @@ pub trait PairDataset {
 /// A dataset of users and ratings for a given item.
 pub trait UserDataset {
     /// A reader.
-    type Reader: Reader<Item = UserRating>;
+    type Reader: Reader<Record = UserRating>;
 
     /// Create a reader.
     fn users(self, Item) -> Result<Self::Reader>;
@@ -52,7 +52,7 @@ pub trait UserDataset {
 /// A dataset of items and ratings for a given user.
 pub trait ItemDataset {
     /// A reader.
-    type Reader: Reader<Item = ItemRating>;
+    type Reader: Reader<Record = ItemRating>;
 
     /// Create a reader.
     fn items(self, User) -> Result<Self::Reader>;
@@ -61,10 +61,10 @@ pub trait ItemDataset {
 /// A reader.
 pub trait Reader {
     /// A record.
-    type Item;
+    type Record;
 
     /// Read the next record.
-    fn next(&mut self) -> Result<Option<Self::Item>>;
+    fn next(&mut self) -> Result<Option<Self::Record>>;
 
     /// Filter records.
     #[inline]
@@ -112,10 +112,10 @@ impl<T: ?Sized> Reader for Box<T>
 where
     T: Reader,
 {
-    type Item = T::Item;
+    type Record = T::Record;
 
     #[inline]
-    fn next(&mut self) -> Result<Option<Self::Item>> {
+    fn next(&mut self) -> Result<Option<Self::Record>> {
         self.deref_mut().next()
     }
 }
@@ -123,14 +123,14 @@ where
 impl<T, U> Reader for Filter<T, U>
 where
     T: Reader,
-    U: FnMut(&T::Item) -> bool,
+    U: FnMut(&T::Record) -> bool,
 {
-    type Item = T::Item;
+    type Record = T::Record;
 
-    fn next(&mut self) -> Result<Option<Self::Item>> {
-        while let Some(item) = self.iterator.next()? {
-            if (self.function)(&item) {
-                return Ok(Some(item));
+    fn next(&mut self) -> Result<Option<Self::Record>> {
+        while let Some(record) = self.iterator.next()? {
+            if (self.function)(&record) {
+                return Ok(Some(record));
             }
         }
         Ok(None)
@@ -140,13 +140,13 @@ where
 impl<T, U, V> Reader for Map<T, U>
 where
     T: Reader,
-    U: FnMut(T::Item) -> V,
+    U: FnMut(T::Record) -> V,
 {
-    type Item = V;
+    type Record = V;
 
-    fn next(&mut self) -> Result<Option<Self::Item>> {
-        if let Some(item) = self.iterator.next()? {
-            Ok(Some((self.function)(item)))
+    fn next(&mut self) -> Result<Option<Self::Record>> {
+        if let Some(record) = self.iterator.next()? {
+            Ok(Some((self.function)(record)))
         } else {
             Ok(None)
         }
@@ -157,10 +157,10 @@ impl<T> Reader for Iterator<T>
 where
     T: ::std::iter::Iterator,
 {
-    type Item = T::Item;
+    type Record = T::Item;
 
     #[inline]
-    fn next(&mut self) -> Result<Option<Self::Item>> {
+    fn next(&mut self) -> Result<Option<Self::Record>> {
         Ok(self.iterator.next())
     }
 }

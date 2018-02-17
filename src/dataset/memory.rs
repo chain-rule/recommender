@@ -19,7 +19,7 @@ impl Memory {
     /// Create a database given a reader.
     pub fn from_reader<T>(mut reader: T) -> Result<Self>
     where
-        T: Reader<Item = PairRating>,
+        T: Reader<Record = PairRating>,
     {
         let mut data = vec![];
         while let Some(record) = reader.next()? {
@@ -38,7 +38,7 @@ impl<'l> PairDataset for &'l Memory {
 }
 
 impl<'l> UserDataset for &'l Memory {
-    type Reader = Box<Reader<Item = UserRating> + 'l>;
+    type Reader = Box<Reader<Record = UserRating> + 'l>;
 
     fn users(self, item: Item) -> Result<Self::Reader> {
         Ok(Box::new(Iterator::from(
@@ -51,7 +51,7 @@ impl<'l> UserDataset for &'l Memory {
 }
 
 impl<'l> ItemDataset for &'l Memory {
-    type Reader = Box<Reader<Item = ItemRating> + 'l>;
+    type Reader = Box<Reader<Record = ItemRating> + 'l>;
 
     fn items(self, user: User) -> Result<Self::Reader> {
         Ok(Box::new(Iterator::from(

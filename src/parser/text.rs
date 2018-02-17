@@ -50,9 +50,9 @@ impl<T> Reader for Text<T>
 where
     T: Read,
 {
-    type Item = PairRating;
+    type Record = PairRating;
 
-    fn next(&mut self) -> Result<Option<Self::Item>> {
+    fn next(&mut self) -> Result<Option<Self::Record>> {
         self.buffer.clear();
         match self.reader.read_line(&mut self.buffer)? {
             0 => return Ok(None),

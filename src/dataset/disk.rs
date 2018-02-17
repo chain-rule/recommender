@@ -43,7 +43,7 @@ impl<'l> PairDataset for &'l Disk {
 }
 
 impl<'l> UserDataset for &'l Disk {
-    type Reader = Box<Reader<Item = UserRating>>;
+    type Reader = Box<Reader<Record = UserRating>>;
 
     fn users(self, item: Item) -> Result<Self::Reader> {
         Ok(Box::new(
@@ -55,7 +55,7 @@ impl<'l> UserDataset for &'l Disk {
 }
 
 impl<'l> ItemDataset for &'l Disk {
-    type Reader = Box<Reader<Item = ItemRating>>;
+    type Reader = Box<Reader<Record = ItemRating>>;
 
     fn items(self, user: User) -> Result<Self::Reader> {
         Ok(Box::new(
