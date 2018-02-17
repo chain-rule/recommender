@@ -1,11 +1,12 @@
-use recommender::Result;
-use recommender::dataset::PairRating;
-use recommender::dataset::Reader;
 use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
 use std::io::Read;
 use std::path::Path;
+
+use Result;
+use dataset::PairRating;
+use dataset::Reader;
 
 pub struct Parser<T> {
     reader: BufReader<T>,

@@ -7,11 +7,10 @@ use recommender::dataset::PairRating;
 use recommender::dataset::Reader;
 use recommender::dataset::User;
 use recommender::dataset::UserRating;
+use recommender::parser::Config;
+use recommender::parser::Parser;
 use std::fs::File;
 use std::path::PathBuf;
-
-use parser::Config;
-use parser::Parser;
 
 pub struct Disk {
     path: PathBuf,

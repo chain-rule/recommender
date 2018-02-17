@@ -2,11 +2,9 @@
 //!
 //! [recommender]: https://en.wikipedia.org/wiki/Recommender_system
 
-mod baseline;
-
+pub mod baseline;
 pub mod dataset;
-
-pub use baseline::Baseline;
+pub mod parser;
 
 pub struct Error(Box<std::error::Error>);
 
