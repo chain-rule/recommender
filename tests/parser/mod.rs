@@ -49,18 +49,18 @@ where
             0 => return Ok(None),
             _ => {}
         }
-        let mut fields = self.buffer.trim().split(self.config.delimiter);
+        let mut fields = self.buffer.split(self.config.delimiter);
         let user = match fields.next() {
-            None => return Ok(None),
             Some(field) => field.parse()?,
+            _ => return Ok(None),
         };
         let item = match fields.next() {
-            None => return Ok(None),
             Some(field) => field.parse()?,
+            _ => return Ok(None),
         };
         let rating = match fields.next() {
-            None => return Ok(None),
             Some(field) => field.parse()?,
+            _ => return Ok(None),
         };
         Ok(Some(((user, item), rating)))
     }
