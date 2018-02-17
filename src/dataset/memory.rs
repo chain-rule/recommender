@@ -1,12 +1,12 @@
 use Result;
 use dataset::Item;
-use dataset::ItemDataset;
 use dataset::ItemRating;
-use dataset::PairDataset;
+use dataset::Items;
 use dataset::PairRating;
+use dataset::Pairs;
 use dataset::User;
-use dataset::UserDataset;
 use dataset::UserRating;
+use dataset::Users;
 use reader::Iterator;
 use reader::Reader;
 
@@ -29,7 +29,7 @@ impl Memory {
     }
 }
 
-impl<'l> PairDataset for &'l Memory {
+impl<'l> Pairs for &'l Memory {
     type Reader = Iterator<::std::iter::Cloned<::std::slice::Iter<'l, PairRating>>>;
 
     fn pairs(self) -> Result<Self::Reader> {
@@ -37,7 +37,7 @@ impl<'l> PairDataset for &'l Memory {
     }
 }
 
-impl<'l> UserDataset for &'l Memory {
+impl<'l> Users for &'l Memory {
     type Reader = Box<Reader<Record = UserRating> + 'l>;
 
     fn users(self, item: Item) -> Result<Self::Reader> {
@@ -50,7 +50,7 @@ impl<'l> UserDataset for &'l Memory {
     }
 }
 
-impl<'l> ItemDataset for &'l Memory {
+impl<'l> Items for &'l Memory {
     type Reader = Box<Reader<Record = ItemRating> + 'l>;
 
     fn items(self, user: User) -> Result<Self::Reader> {

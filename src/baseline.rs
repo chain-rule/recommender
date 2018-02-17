@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 use Result;
 use dataset::Item;
-use dataset::PairDataset;
+use dataset::Pairs;
 use dataset::Rating;
 use dataset::User;
 use reader::Reader;
@@ -34,7 +34,7 @@ impl Baseline {
         item_shrinkage: usize,
     ) -> Result<Self>
     where
-        T: Copy + PairDataset,
+        T: Copy + Pairs,
     {
         let mut global_mean = Mean::new(0);
         let mut user_means: HashMap<User, Mean> = HashMap::new();

@@ -31,7 +31,7 @@ pub type UserRating = (User, Rating);
 pub type ItemRating = (Item, Rating);
 
 /// A dataset of users, items, and ratings.
-pub trait PairDataset {
+pub trait Pairs {
     /// A reader.
     type Reader: Reader<Record = PairRating>;
 
@@ -40,7 +40,7 @@ pub trait PairDataset {
 }
 
 /// A dataset of users and ratings for a given item.
-pub trait UserDataset {
+pub trait Users {
     /// A reader.
     type Reader: Reader<Record = UserRating>;
 
@@ -49,7 +49,7 @@ pub trait UserDataset {
 }
 
 /// A dataset of items and ratings for a given user.
-pub trait ItemDataset {
+pub trait Items {
     /// A reader.
     type Reader: Reader<Record = ItemRating>;
 

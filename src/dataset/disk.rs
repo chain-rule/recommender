@@ -3,14 +3,14 @@ use std::path::PathBuf;
 
 use Result;
 use dataset::Item;
-use dataset::ItemDataset;
 use dataset::ItemRating;
-use dataset::PairDataset;
+use dataset::Items;
 use dataset::PairRating;
+use dataset::Pairs;
 use dataset::Reader;
 use dataset::User;
-use dataset::UserDataset;
 use dataset::UserRating;
+use dataset::Users;
 use parser::Text;
 use parser::TextConfig;
 
@@ -33,7 +33,7 @@ impl Disk {
     }
 }
 
-impl<'l> PairDataset for &'l Disk {
+impl<'l> Pairs for &'l Disk {
     type Reader = Text<File>;
 
     #[inline]
@@ -42,7 +42,7 @@ impl<'l> PairDataset for &'l Disk {
     }
 }
 
-impl<'l> UserDataset for &'l Disk {
+impl<'l> Users for &'l Disk {
     type Reader = Box<Reader<Record = UserRating>>;
 
     fn users(self, item: Item) -> Result<Self::Reader> {
@@ -54,7 +54,7 @@ impl<'l> UserDataset for &'l Disk {
     }
 }
 
-impl<'l> ItemDataset for &'l Disk {
+impl<'l> Items for &'l Disk {
     type Reader = Box<Reader<Record = ItemRating>>;
 
     fn items(self, user: User) -> Result<Self::Reader> {
