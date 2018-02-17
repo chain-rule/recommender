@@ -9,18 +9,18 @@ use dataset::PairRating;
 use dataset::Reader;
 use dataset::User;
 use dataset::UserRating;
-use parser::Config;
-use parser::Parser;
+use parser::Text;
+use parser::TextConfig;
 
 /// A dataset that reads records from disk.
 pub struct Disk {
     path: PathBuf,
-    config: Config,
+    config: TextConfig,
 }
 
 impl Disk {
     /// Create a dataset.
-    pub fn new<T>(path: T, config: Config) -> Self
+    pub fn new<T>(path: T, config: TextConfig) -> Self
     where
         T: Into<PathBuf>,
     {
@@ -32,17 +32,17 @@ impl Disk {
 }
 
 impl<'l> Dataset for &'l Disk {
-    type Pairs = Parser<File>;
+    type Pairs = Text<File>;
     type Users = Box<Reader<Item = UserRating>>;
     type Items = Box<Reader<Item = ItemRating>>;
 
     fn pairs(self) -> Result<Self::Pairs> {
-        Parser::from_path(&self.path, self.config)
+        Text::from_path(&self.path, self.config)
     }
 
     fn users(self, item: Item) -> Result<Self::Users> {
         Ok(Box::new(
-            Parser::from_path(&self.path, self.config)?
+            Text::from_path(&self.path, self.config)?
                 .filter(move |&((_, other), _): &PairRating| other == item)
                 .map(|((user, _), rating)| (user, rating)),
         ))
@@ -50,7 +50,7 @@ impl<'l> Dataset for &'l Disk {
 
     fn items(self, user: User) -> Result<Self::Items> {
         Ok(Box::new(
-            Parser::from_path(&self.path, self.config)?
+            Text::from_path(&self.path, self.config)?
                 .filter(move |&((other, _), _): &PairRating| other == user)
                 .map(|((_, item), rating)| (item, rating)),
         ))
