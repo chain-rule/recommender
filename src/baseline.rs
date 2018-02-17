@@ -74,11 +74,11 @@ impl Baseline {
             global_bias: global_mean.value,
             user_biases: user_means
                 .iter()
-                .map(|(&id, mean)| (id, mean.value))
+                .map(|(&user, mean)| (user, mean.value))
                 .collect(),
             item_biases: item_means
                 .iter()
-                .map(|(&id, mean)| (id, mean.value))
+                .map(|(&item, mean)| (item, mean.value))
                 .collect(),
         })
     }
